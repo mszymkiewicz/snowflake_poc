@@ -7,7 +7,7 @@ CREATE OR REPLACE TABLE poc
 );
 
 -- Normally I would differentiate these warehouses with size etc. 
--- For exaxmple the one for writer would be bigger, but for now I am looking at the cost of the test account. 
+-- For exaxmple the one for a writer would be bigger, but for now I am looking at the cost of the test account. 
 CREATE WAREHOUSE READER_WH WITH 
 WAREHOUSE_SIZE = 'X-SMALL'
 AUTO_SUSPEND = 60
