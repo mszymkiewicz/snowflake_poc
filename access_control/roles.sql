@@ -27,13 +27,16 @@ GRANT ROLE reader TO ROLE developer;
 
 CREATE USER developer
 PASSWORD = 'poc123'
-DEFAULT_ROLE = developer
 MUST_CHANGE_PASSWORD = TRUE;
 
 CREATE USER analyst
 PASSWORD = 'poc789'
-DEFAULT_ROLE = analyst
 MUST_CHANGE_PASSWORD = TRUE;
+
+GRANT ROLE analyst TO USER analyst;
+GRANT ROLE developer TO USER developer;
+ALTER USER analyst SET DEFAULT_ROLE = analyst;
+ALTER USER developer SET DEFAULT_ROLE = developer;
 
 --cleaning up
 DROP USER developer;
