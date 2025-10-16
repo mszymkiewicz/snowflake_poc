@@ -1,22 +1,29 @@
+USE ROLE SYSADMIN;
 CREATE OR REPLACE DATABASE poc;
-CREATE OR REPLACE SCHEMA poc;
+CREATE OR REPLACE SCHEMA poc; -- should be created with managed access.
+
+USE DATABASE poc;
+ALTER SCHEMA poc ENABLE MANAGED ACCESS;
 CREATE OR REPLACE TABLE poc
 (
     id int,
     description text
 );
 
--- Normally I would differentiate these warehouses with size etc. 
--- For exaxmple the one for a writer would be bigger, but for now I am looking at the cost of the test account. 
+-- should be createad as SYSADMIN. Ownership to the local role, which should be granted to SYSADMIN. 
 CREATE WAREHOUSE READER_WH WITH 
-WAREHOUSE_SIZE = 'X-SMALL'
-AUTO_SUSPEND = 60
-AUTO_RESUME = TRUE;
+    WAREHOUSE_SIZE = 'X-SMALL'
+    MAX_CLUSTER_COUNT = 10-- MULTI_CLUSTER = TRUE AUTOMATICALLY WHEN MAX_CLUSTER_COUNT > 1 
+    SCALING_POLICY = 'ECONOMY'
+    AUTO_SUSPEND = 60
+    AUTO_RESUME = TRUE;
 
 CREATE WAREHOUSE WRITER_WH WITH 
-WAREHOUSE_SIZE = 'X-SMALL'
-AUTO_SUSPEND = 60
-AUTO_RESUME = TRUE;
+    WAREHOUSE_SIZE = 'X-SMALL'
+    MAX_CLUSTER_COUNT = 10
+    SCALING_POLICY = 'ECONOMY'
+    AUTO_SUSPEND = 60
+    AUTO_RESUME = TRUE;
 
 --cleaning up
 DROP WAREHOUSE WRITER_WH;

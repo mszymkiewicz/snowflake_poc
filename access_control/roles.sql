@@ -3,13 +3,13 @@ CREATE OR ALTER ROLE writer;
 
 --reader role details
 GRANT USAGE ON WAREHOUSE READER_WH TO ROLE reader;
-GRANT USAGE ON DATABASE POC TO ROLE reader;
+GRANT USAGE ON DATABASE POC TO ROLE reader; -- it should not give the possibility to create new objects
 GRANT USAGE ON SCHEMA POC.POC TO ROLE reader;
 GRANT SELECT ON ALL TABLES IN SCHEMA POC.POC TO ROLE reader;
 GRANT SELECT ON ALL VIEWS IN SCHEMA POC.POC TO ROLE reader;
-GRANT SELECT ON FUTURE TABLES IN SCHEMA POC.POC TO ROLE reader;
+GRANT SELECT ON FUTURE TABLES IN SCHEMA POC.POC TO ROLE reader;--without managed access it will execute but nothing changes
+
 GRANT SELECT ON FUTURE VIEWS IN SCHEMA POC.POC TO ROLE reader;
-REVOKE CREATE SCHEMA ON DATABASE POC FROM ROLE reader;
 
 --writer role details
 GRANT USAGE ON WAREHOUSE WRITER_WH TO ROLE writer;
@@ -33,12 +33,18 @@ CREATE USER developer
 PASSWORD = 'poc123'
 MUST_CHANGE_PASSWORD = TRUE;
 
-CREATE USER analyst
+CREATE USER analyst--PAT is the safest way to authentificate
 PASSWORD = 'poc789'
 MUST_CHANGE_PASSWORD = TRUE;
 
-GRANT ROLE analyst TO USER analyst;
+GRANT ROLE analyst TO USER analyst;-- each role should be granted to sysadmin. Without it SYSADMIN will ot be able to manage objects created by users roles. 
 GRANT ROLE developer TO USER developer;
+
+GRANT ROLE reader TO ROLE SYSADMIN;
+GRANT ROLE writer TO ROLE SYSADMIN;
+GRANT ROLE analyst TO ROLE SYSADMIN;
+GRANT ROLE developer TO ROLE SYSADMIN;
+
 ALTER USER analyst 
     SET 
         DEFAULT_ROLE = analyst
