@@ -1,6 +1,5 @@
 USE ROLE SYSADMIN;
 USE WAREHOUSE WRITER_WH;
-USE ROLE SYSADMIN;
 USE DATABASE POC;
 USE SCHEMA POC;
 CREATE OR REPLACE PROCEDURE table_mod
@@ -155,3 +154,5 @@ $$;
 SELECT *
     FROM POC.POC.event_table -- adding logs to the table takes time, sometimes it is important to wait a few minutes
 ORDER BY TIMESTAMP DESC;
+
+CALL POC.POC.TABLE_MOD(3, 'poc', 'poc', 'test_table', 'temp_col', '', TRUE, '', 'renamed_col');

@@ -18,6 +18,7 @@ LANGUAGE PYTHON
 RUNTIME_VERSION = '3.13'
 PACKAGES = ('snowflake-snowpark-python')
 HANDLER = 'py_mod_table'
+EXECUTE AS OWNER
 AS
 $$
 import logging
@@ -115,7 +116,8 @@ def py_mod_table(session, action_type, db_name, schema_name, tbl_name, col_name,
         logger.error(f'Exception')
         return f"ERROR - {str(e)}"
 $$;
-ALTER PROCEDURE py_mod_table(INT, STRING, STRING, STRING, STRING, STRING, BOOLEAN, STRING, STRING) SET LOG_LEVEL = 'INFO';
+ALTER PROCEDURE py_mod_table(INT, STRING, STRING, STRING, STRING, STRING, BOOLEAN, STRING, STRING) 
+SET LOG_LEVEL = 'INFO';
 
 SELECT *
     FROM POC.POC.event_table -- adding logs to the table takes time, sometimes it is important to wait a few minutes
@@ -124,3 +126,4 @@ ORDER BY TIMESTAMP DESC;
 
 TRUNCATE POC.POC.event_table ;
 
+CALL poc.poc.py_mod_table(2, 'poc', 'poc', 'test_table', 'renamed_col', '', TRUE, '', '');
