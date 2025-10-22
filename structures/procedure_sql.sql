@@ -19,7 +19,7 @@ LANGUAGE SQL
 EXECUTE AS CALLER
 AS $$
 BEGIN
-
+-- if we use transaction, the logs before rollback will be logged, even with rollback executed. Logs after rollback may not be logged.  DDL (ALTER TABLE) will auto-commit even with transaction. 
 SYSTEM$LOG('INFO','Starting action type: ' || 
             CASE
                 WHEN :action_type = 1 
@@ -33,7 +33,8 @@ SYSTEM$LOG('INFO','Starting action type: ' ||
 
     IF (:col_name NOT RLIKE '^[A-Za-z_][A-Za-z0-9_]*$') 
     THEN
-        RETURN 'ERROR - INVALID COLUMN NAME';
+        SYSTEM$LOG('error','Invalid column name');
+        RETURN 'ERROR - INVALID COLUMN NAME';-- logowanie, na końcu return
     END IF;
 
     LET sqlstat STRING := '';
