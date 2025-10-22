@@ -1,4 +1,4 @@
-USE ROLE SYSADMIN;
+USE ROLE DEVELOPER;
 USE WAREHOUSE WRITER_WH;
 USE DATABASE POC;
 USE SCHEMA POC;
@@ -18,7 +18,7 @@ LANGUAGE PYTHON
 RUNTIME_VERSION = '3.13'
 PACKAGES = ('snowflake-snowpark-python')
 HANDLER = 'py_mod_table'
-EXECUTE AS OWNER
+EXECUTE AS CALLER
 AS
 $$
 import logging
@@ -123,7 +123,5 @@ SELECT *
     FROM POC.POC.event_table -- adding logs to the table takes time, sometimes it is important to wait a few minutes
 WHERE SCOPE:name::STRING ='snowflake.stored_procedure'
 ORDER BY TIMESTAMP DESC;
-
-TRUNCATE POC.POC.event_table ;
 
 CALL poc.poc.py_mod_table(2, 'poc', 'poc', 'test_table', 'renamed_col', '', TRUE, '', '');

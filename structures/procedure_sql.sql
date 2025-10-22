@@ -1,4 +1,4 @@
-USE ROLE SYSADMIN;
+USE ROLE developer;
 USE WAREHOUSE WRITER_WH;
 USE DATABASE POC;
 USE SCHEMA POC;
@@ -16,7 +16,7 @@ CREATE OR REPLACE PROCEDURE table_mod
 )
 RETURNS STRING
 LANGUAGE SQL
-EXECUTE AS OWNER
+EXECUTE AS CALLER
 AS $$
 BEGIN
 
@@ -150,6 +150,11 @@ SYSTEM$LOG('INFO','Starting action type: ' ||
             RETURN 'ERROR - ' || SQLCODE || ': ' || SQLERRM || ' | SQL: ' || sqlstat;
 END;
 $$;
+
+USE ROLE SECURITYADMIN;
+GRANT ROLE developer to SYSADMIN;
+
+USE ROLE DEVELOPER;
 
 SELECT *
     FROM POC.POC.event_table -- adding logs to the table takes time, sometimes it is important to wait a few minutes
